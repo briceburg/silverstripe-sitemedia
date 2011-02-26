@@ -1,7 +1,13 @@
 <?php 
 
 class SiteMedia extends DataObject {
-	static $plural_name = 'Media';
+	static $plural_name = 'SiteMedias';
+	
+	static $default_thumbnail_width = 96;
+	static $default_thumbnail_height = 96;
+	
+	static $default_width = 640;
+	static $default_height = 360;
 	
 	static $summary_fields = array(
 		'CMSThumbnail'	=> 'Thumbnail',
@@ -75,12 +81,12 @@ class SiteMedia extends DataObject {
 	 * Returns the Type of this Media Asset (e.g. "Video" if SiteVideo, "Photo" if SitePhoto)
 	 * @return String
 	 */
-	public function Type()
+	public function getType()
 	{
 		return  preg_replace('/^Site/','',$this->MediaType);
 	}
 	
-	public function IsPrivate()
+	public function getIsPrivate()
 	{
 		return ($this->Private) ? 'Yes' : 'No';
 	}
@@ -94,6 +100,16 @@ class SiteMedia extends DataObject {
 		return ($obj = $this->getTypeDecorator()) ? $obj->Thumbnail() : null;
 	}
 	
+	public function MediaMarkup()
+	{
+		$templates = ($this->MediaType) ? array($this->MediaType) : array();
+		$templates[] = __CLASS__; 
+
+		return $this->renderWith($templates);
+	}
+	
+	public function DefaultWidth() {return self::$default_width;}	
+	public function DefaultHeight() {return self::$default_height;}
 	
 	
 }

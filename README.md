@@ -10,7 +10,7 @@
 ## Overview
 Add and manage a common library of Media from your Pages and DataObjects. 
 
-Version aardvark 1
+Version aardvark PR-2
 
 
 ### Features
@@ -26,12 +26,14 @@ Version aardvark 1
  * Support for any custom field in your Types, e.g. Caption, Poster Image, YouTubeVideoID, etc.
     
  * Limit types per Decoration (e.g. Photos only on Pages, Photos and Video on Artists)
+ 
+ * [coming very soon] Includes designer and developer friendly streamlined media player.
 
  * [coming soon] Viewers can browse all uploaded Media on your site from a single Page
  
  * Ability to mark uploaded Media as Private (excludes it from the Media Page)
  
- * [coming soon] Includes a designer and developer friendly streamlined media player.
+
  
  
 ### Demonstration
@@ -42,10 +44,13 @@ Version aardvark 1
 ### Configuration & Usage
 
  * Coming soon. See _config.php for an example.
+ * Reference the templates and media types
 
 ### Known Issues, TODO
  
- * Add CSS, JavaScript, Markup of a Sample Media Browser
+ * Add CSS, JavaScript for the included Media Gallery Markup sample.
  * Add Comments to SiteMedia (deferred until new Comments Module)
  * Documentation, example usage.
+ * Add Demo YouTube Video Type
+ * Add Demo Audio Player
  * Create a SiteMediaPage where all uploaded and non private SiteMedia is displayed.

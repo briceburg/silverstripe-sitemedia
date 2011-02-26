@@ -1,6 +1,7 @@
-<% if HasMedia %>
+<% if HasSiteMedia %>
+	
 	<div class="site-media-gallery">
-		<% if MoreThanOneMedia %>
+		<% if HasMultipleSiteMedia %>
 			<div class="site-media-nav-next"><div></div></div>
 			<div class="site-media-nav-prev"><div></div></div>
 			
@@ -16,17 +17,24 @@
 		<div id="site-media-container">
 		
 			<div id="site-media-items">
-				<% control Media %>
+				<% control SiteMedia %>
 				
 					<div class="site-media-item">
 					
-						<% if Type == Photo %>
-						
-							$File.GalleryImage
+						<% if Type == SomeMediaType %>
+							Example override...
 							
+							NOTE: you can override also override the MediaMarkup
+							      by adding the type's template to the Media
+							      directory of your theme. 
+							      (e.g. themes/MyTheme/Media/SitePhoto.ss)
+							      
+							NOTE: you can override this markup by adding
+							      SiteMedia.ss to the Includes directory of
+							      your theme.
+							      
 						<% else %>
-							$ReadyVideo
-							<a href="$File.Link" class="digome-player {isStream: false, width: 625, height: 352}">Loading Video</a>
+							$MediaMarkup
 						<% end_if %>
 						
 					</div>
@@ -35,6 +43,8 @@
 			</div>
 		
 		</div>
+		
+		
 	</div>
 	
 <% end_if %>

@@ -6,6 +6,8 @@
 	
 ## Requirements
  * SilverStripe 2.4.x
+ * DataObjectManager (latest)
+ * Uploadify (latest)
 
 ## Overview
 Add and manage a common library of Media from your Pages and DataObjects. 
@@ -33,7 +35,6 @@ Version aardvark PR-2
  
  * Ability to mark uploaded Media as Private (excludes it from the Media Page)
  
-
  
  
 ### Demonstration
@@ -49,6 +50,7 @@ Version aardvark PR-2
 ### Known Issues, TODO
  
  * Add CSS, JavaScript for the included Media Gallery Markup sample.
+ * Remove reliance on DataObjectManger and Uploadify (through a configuration option)
  * Add Comments to SiteMedia (deferred until new Comments Module)
  * Documentation, example usage.
  * Add Demo YouTube Video Type

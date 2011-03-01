@@ -24,29 +24,38 @@ class SiteMedia extends DataObject {
 	);
 	
 	public function getCMSFields($params = null){
+
 		$fields = parent::getCMSFields(array(
 			'restrictFields' => array_merge(array_keys(self::$db), SiteMediaRegistry::$decorated_classes, (array) 'MediaType')
 		));
 		
-		$allowed_types = array();
-		$types = array();
 		
 		// detect the has_one
+		// TODO: investigate a more robust method to retrieve the ComplexTableField $Controller property 
+		$current_class = Controller::curr()->getFormOwner()->currentPage()->class;
+		$allowed_types = array();
+		$types = array();
 		foreach($fields->dataFields() as $field)
 		{
 			$class = preg_replace('/ID$/','',$field->Name(),1,$count);
 			if($count && $field->is_a('DropdownField') && in_array($class,SiteMediaRegistry::$decorated_classes))
 			{
-				$allowed_types = SiteMediaRegistry::$allowed_types_by_class[$class];
-				break;
+				if($class == $current_class)
+				{
+					$allowed_types = SiteMediaRegistry::$allowed_types_by_class[$class];
+				}
+				else
+				{
+					$fields->removeByName($field->name,true);
+				}
+				
 			}
 		}
-		
+
 		foreach(SiteMediaRegistry::$media_types as $type)
 		{
 			if(empty($allowed_types) || in_array($type,$allowed_types))
-				$types[$type] = preg_replace('/^Site/','',$type);
-			//$fields->removeByName($type . 'ID');				
+				$types[$type] = preg_replace('/^Site/','',$type);				
 		}
 		
 		$fields->dataFieldByName('MediaType')->setSource($types);
@@ -103,7 +112,7 @@ class SiteMedia extends DataObject {
 	public function MediaMarkup()
 	{
 		$templates = ($this->MediaType) ? array($this->MediaType) : array();
-		$templates[] = __CLASS__; 
+		$templates[] = __CLASS__ . 'Type'; 
 
 		return $this->renderWith($templates);
 	}

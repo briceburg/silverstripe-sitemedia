@@ -8,7 +8,7 @@ class SiteMediaDecorator extends DataObjectDecorator {
 		{
 			$has_ones[$class] = $class;
 		}
-		
+
 		return array(
 			'has_one' 	=> $has_ones,
 			'db'		=> array('MediaType' => "Enum('$types')"));

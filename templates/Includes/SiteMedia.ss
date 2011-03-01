@@ -6,7 +6,7 @@
 			<div class="site-media-nav-prev"><div></div></div>
 			
 			<div class="site-media-nav-button-container">
-				<% control Media %>
+				<% control SiteMedia %>
 					<a href="#" class="site-media-button <% if First %>active<% end_if %>">$Pos</a>
 				<% end_control %>
 				<div class="cl">&nbsp;</div>

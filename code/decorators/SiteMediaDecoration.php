@@ -8,7 +8,7 @@ class SiteMediaDecoration extends DataObjectDecorator {
 			)
 		);
 	}
-
+	
 	public function updateCMSFields(&$fields)
 	{
 		$tab = ($fields->fieldByName('Root.Content')) ? 'Root.Content.Media' : 'Root.Media';
@@ -16,7 +16,7 @@ class SiteMediaDecoration extends DataObjectDecorator {
 		$fields->removeByName(SiteMedia::$plural_name);
 		if($this->owner->ShowSiteMedia() && $this->owner->ID)
 		{
-			$field = new HasManyDataObjectManager($this->owner, SiteMedia::$plural_name, 'SiteMedia');
+			$field = new SiteMediaDataObjectManager($this->owner, SiteMedia::$plural_name, 'SiteMedia');
 			$field->setRelationAutoSetting(true);
 			
 			$fields->addFieldToTab($tab,$field);

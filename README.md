@@ -6,8 +6,6 @@
 	
 ## Requirements
  * SilverStripe 2.4.x
- * DataObjectManager (latest)
- * Uploadify (latest)
 
 ## Overview
 Add and manage a common library of Media from your Pages and DataObjects. 
@@ -22,6 +20,8 @@ Version aardvark PR-2
  * Decorate only the Objects you want Media on
  
  * Control the order of Media on an Object
+ 
+ * Leverages Uploadify and DataObjectManager modules for an enhanced CMS experience. Falls back to core SilverStripe HasManyComplexTableField & FileIframeField in their absence.
 
  * Define custom Media Types using standard SilverStripe practices
  
@@ -35,7 +35,7 @@ Version aardvark PR-2
  
  * Ability to mark uploaded Media as Private (excludes it from the Media Page)
  
- 
+
  
 ### Demonstration
 

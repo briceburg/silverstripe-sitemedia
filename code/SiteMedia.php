@@ -90,8 +90,8 @@ class SiteMedia extends DataObject {
 
 		$folder = (property_exists($this, 'media_upload_folder')) ?
 			$this->media_upload_folder : 
-			Object::get_static($class,'$media_upload_folder');
-		$folder .= '/' . date('Y-m') . ($subfolder) ? $subfolder : '';
+			Object::get_static($class,'media_upload_folder');
+		$folder .= '/' . date('Y-m') . (($subfolder) ? '/' . $subfolder : '');
 		
 		// attempt to use Uploadify module
 		if(class_exists('FileUploadField'))

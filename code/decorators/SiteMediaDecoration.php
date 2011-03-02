@@ -14,10 +14,21 @@ class SiteMediaDecoration extends DataObjectDecorator {
 		$tab = ($fields->fieldByName('Root.Content')) ? 'Root.Content.Media' : 'Root.Media';
 		
 		$fields->removeByName(SiteMedia::$plural_name);
+		
+		
 		if($this->owner->ShowSiteMedia() && $this->owner->ID)
 		{
-			$field = new SiteMediaDataObjectManager($this->owner, SiteMedia::$plural_name, 'SiteMedia');
-			$field->setRelationAutoSetting(true);
+			// attempt to use DataObjectManager module
+			if(class_exists('HasManyDataObjectManager'))
+			{
+				$field = new SiteMediaDataObjectManager($this->owner, SiteMedia::$plural_name, 'SiteMedia');
+				$field->setRelationAutoSetting(true);
+			}
+			else
+			{
+			// else default to regular ComplexTableField
+				$field = new SiteMediaComplexTableField($this->owner, SiteMedia::$plural_name, 'SiteMedia');
+			}
 			
 			$fields->addFieldToTab($tab,$field);
 		}
@@ -33,7 +44,6 @@ class SiteMediaDecoration extends DataObjectDecorator {
 		return (property_exists($this->owner, 'show_site_media')) ?
 			$this->owner->show_site_media : true;
 	}
-
 	
 	// TODO: cache this (key: ID, Aggregate of SiteMedia LastEdited) 
 	public function SiteMedia(){

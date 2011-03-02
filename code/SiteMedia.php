@@ -68,16 +68,51 @@ class SiteMedia extends DataObject {
 	}
 	
 	public function getCMSThumbnail() {
-    	return ($img = $this->Thumbnail()) ? $img->CMSThumbnail() : null;
+		return ($img = $this->Thumbnail()) ? $img->CMSThumbnail() : null;
+	}
+	
+	public function getUploadField($fieldName, $mediaType){
+		$class = $mediaType->class;
+		$plural_name = Object::get_static($class, 'plural_name');
+		$allowed_file_types = Object::get_static($class, 'allowed_file_types');
+
+		$folder = (property_exists($this, 'media_upload_folder')) ?
+			$this->media_upload_folder : Object::get_static($class,'$media_upload_folder');
+		$folder .= '/' . date('Y-m');
+		
+		// attempt to use Uploadify module
+		if(class_exists('FileUploadField'))
+		{
+			$field = new FileUploadField($fieldName);
+			$field->uploadFolder = $folder;
+			if($allowed_file_types)
+			{
+				$field->setFileTypes(
+					$allowed_file_types, 
+					$plural_name . '(' . implode(',',$allowed_file_types) . ')'
+				);
+			}
+			$field->allowFolderSelection();
+		}
+		else
+		{
+		// else default to regular FileIFrameField
+			$field = new FileIFrameField($fieldName);
+			$field->setFolderName($folder);
+			if($allowed_file_types)
+			{
+				$validator = new Upload_Validator();
+				$validator->setAllowedExtensions($allowed_file_types);
+				$field->setValidator($validator);
+			}
+		}
+		
+		return $field;
 	}
 	
 	
 	private function getTypeDecorator()
 	{
-		static $instance;
-		if($instance)
-			return $instance;
-		
 		foreach($this->extension_instances as $instance) {
 			if($instance->class == $this->MediaType)	
 			{

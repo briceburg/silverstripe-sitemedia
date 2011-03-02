@@ -50,7 +50,6 @@ Version aardvark PR-2
 ### Known Issues, TODO
  
  * Add CSS, JavaScript for the included Media Gallery Markup sample.
- * Remove reliance on DataObjectManger and Uploadify (through a configuration option)
  * Add Comments to SiteMedia (deferred until new Comments Module)
  * Documentation, example usage.
  * Add Demo YouTube Video Type

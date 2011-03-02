@@ -71,14 +71,27 @@ class SiteMedia extends DataObject {
 		return ($img = $this->Thumbnail()) ? $img->CMSThumbnail() : null;
 	}
 	
-	public function getUploadField($fieldName, $mediaType){
+	/**
+	 * Returns a form field for uploading a file. 
+	 *   Attempts to use the Uploadify module if present.
+	 * @param DataObjectDecorator $mediaType Media Type Instance (e.g. SitePhoto)
+	 * @param string $fieldName Form Field Name
+	 * @param string $fieldTitle Form Field Title
+	 * @param array|null $fileTypes Array of allowed extensions (e.g. array('gif','jpg'))
+	 * @param string|null $subfolder Files will be uploaded to this subfolder of the Media Type's $media_upload_folder 
+	 * @return FormField
+	 */
+	public function getUploadField($mediaType, $fieldName, $fieldTitle = null, $fileTypes = null, $subfolder = null){
 		$class = $mediaType->class;
-		$plural_name = Object::get_static($class, 'plural_name');
-		$allowed_file_types = Object::get_static($class, 'allowed_file_types');
+		
+		$allowed_file_types = (is_array($fileTypes)) ?
+			$fileTypes :
+			Object::get_static($class, 'allowed_file_types');
 
 		$folder = (property_exists($this, 'media_upload_folder')) ?
-			$this->media_upload_folder : Object::get_static($class,'$media_upload_folder');
-		$folder .= '/' . date('Y-m');
+			$this->media_upload_folder : 
+			Object::get_static($class,'$media_upload_folder');
+		$folder .= '/' . date('Y-m') . ($subfolder) ? $subfolder : '';
 		
 		// attempt to use Uploadify module
 		if(class_exists('FileUploadField'))
@@ -89,7 +102,7 @@ class SiteMedia extends DataObject {
 			{
 				$field->setFileTypes(
 					$allowed_file_types, 
-					$plural_name . '(' . implode(',',$allowed_file_types) . ')'
+					implode(',',$allowed_file_types)
 				);
 			}
 			$field->allowFolderSelection();
@@ -105,6 +118,11 @@ class SiteMedia extends DataObject {
 				$validator->setAllowedExtensions($allowed_file_types);
 				$field->setValidator($validator);
 			}
+		}
+		
+		if($fieldTitle)
+		{
+			$field->setTitle($fieldTitle);
 		}
 		
 		return $field;

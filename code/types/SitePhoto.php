@@ -20,12 +20,11 @@ class SitePhoto extends DataObjectDecorator implements SiteMediaType_Interface {
 		if($this->owner->MediaType != __CLASS__)
 			return;
 		
-			
-		$uploadField = $this->owner->getUploadField('Photo',$this);
+		$fileField = $this->owner->getUploadField($this, 'Photo');
 		
 		$fields->addFieldsToTab('Root.Main', array(
 			new TextField('Caption'),
-			$uploadField
+			$fileField
 		));
 	}
 	

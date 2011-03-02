@@ -22,32 +22,29 @@ class SiteVideo extends DataObjectDecorator implements SiteMediaType_Interface {
 		if($this->owner->MediaType != __CLASS__)
 			return;
 		
-		$folder = (property_exists($this->owner, 'media_upload_folder')) ?
-			$this->owner->media_upload_folder : self::$media_upload_folder;
-		$folder .= '/' . date('Y-m');
-		
-		$file_field = new FileUploadField('Video');
-		$file_field->uploadFolder = $folder;
-		$file_field->setFileTypes(
-			self::$allowed_file_types, 
-			self::$plural_name . '(' . implode(',',self::$allowed_file_types) . ')'
+		$fileField = $this->owner->getUploadField($this, 'Video');
+		$thumbField = $this->owner->getUploadField(
+			$this, 
+			'ThumbnailImage', 
+			'Thumbnail',
+			SitePhoto::$allowed_file_types,
+			'images'
 		);
-		$file_field->allowFolderSelection();
+		$posterField = $this->owner->getUploadField(
+			$this, 
+			'PosterImage', 
+			'Poster Image',
+			SitePhoto::$allowed_file_types,
+			'images'
+		);
 		
-		$thumb_field = new ImageUploadField('ThumbnailImage');
-		$thumb_field->uploadFolder = $folder . '/images';
-		$thumb_field->allowFolderSelection();
-		
-		$poster_field = new ImageUploadField('PosterImage');
-		$poster_field->uploadFolder = $folder . '/images';
-		$poster_field->allowFolderSelection();
-		
-		$fields->addFieldsToTab('Root.Main',array( 
+		$fields->addFieldsToTab('Root.Main', array(
 			new TextField('Caption'),
-			$file_field,
-			$thumb_field,
-			$poster_field
+			$fileField,
+			$thumbField,
+			$posterField
 		));
+		
 	}
 	
 	

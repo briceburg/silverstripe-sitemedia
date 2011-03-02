@@ -32,7 +32,11 @@ class SiteMedia extends DataObject {
 		
 		// detect the has_one
 		// TODO: investigate a more robust method to retrieve the ComplexTableField $Controller property 
-		$current_class = Controller::curr()->getFormOwner()->currentPage()->class;
+		$current_page = Controller::curr()->getFormOwner()->currentPage();
+		$current_class = ($current_page->is_a('ModelAdmin_RecordController')) ?
+			$current_page->getCurrentRecord()->class : $current_page->class;
+		
+		
 		$allowed_types = array();
 		$types = array();
 		foreach($fields->dataFields() as $field)
@@ -119,6 +123,5 @@ class SiteMedia extends DataObject {
 	
 	public function DefaultWidth() {return self::$default_width;}	
 	public function DefaultHeight() {return self::$default_height;}
-	
 	
 }

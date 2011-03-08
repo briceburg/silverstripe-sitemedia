@@ -45,10 +45,43 @@ class SiteMediaDecoration extends DataObjectDecorator {
 			$this->owner->show_site_media : true;
 	}
 	
-	// TODO: cache this (key: ID, Aggregate of SiteMedia LastEdited) 
-	public function SiteMedia(){
+	
+	/**
+	 * Fetch the Site Media belonging to this object
+	 * @param string|array $type optional filter by media type. e.g. "SitePhoto" for only SitePhotos or array('SitePhoto','SiteMedia')
+	 * @param integer $limit optional limit
+	 * @return ComponentSet
+	 */
+	public function SiteMedia($type = null, $limit = null){
+		// TODO: cache this (key: ID, Aggregate of SiteMedia LastEdited) 
+		
 		$method = SiteMedia::$plural_name;
-		return $this->owner->$method();
+		$filter = null;
+		if($type)
+		{
+			$filter = "\"MediaType\"" . (is_array($type) ? " IN('" . implode("','",$type) . "')" : " = '$type'");
+		}
+
+		return $this->owner->$method($filter, null, null, $limit);
+	}
+	
+	/**
+	 * Fetch the first Site Media belonging to this object.
+	 * This method is useful for quickly fetching media in the parent object, 
+	 *   e.g. for a Thumbnail funtion on the parent object, use:
+	 *    
+	 		public function Thumbnail(){
+    			return ($media = $this->FirstSiteMedia('SitePhoto')) ?
+    				$media->Thumbnail() : null;
+    		}
+	 * 
+	 * @param string $type optional filter by type.
+	 * @return SiteMedia
+	 */
+	public function FirstSiteMedia($type = null)
+	{
+		return ($set = $this->SiteMedia($type, 1)) ?
+    		$set->First() : null;
 	}
 	
 	public function HasSiteMedia(){

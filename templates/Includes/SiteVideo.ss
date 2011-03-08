@@ -1,6 +1,6 @@
 <!-- Brice's Super Simple HTML5 Video player. NOT Compatible with all video formats! -->
 <video 
-	src="{$File.URL}"
+	src="{$Video.URL}"
 	poster="{PosterImage.SiteMediaImage.URL}"
 	width="{$DefaultWidth}"
 	height="{$DefaultHeight}"

@@ -53,7 +53,8 @@ class SiteVideo extends DataObjectDecorator implements SiteMediaType_Interface {
 	}
 
 	public function Thumbnail(){
-		return $this->owner->ThumbnailImage();
+		return ($this->owner->ThumbnailImageID) ? 
+			$this->owner->ThumbnailImage() : $this->owner->PosterImage();
 	}
 	
 

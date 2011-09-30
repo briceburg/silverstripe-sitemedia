@@ -3,7 +3,7 @@
 class SiteMediaDecoration extends DataObjectDecorator {
 	function extraStatics(){
 		return array(
-			'has_many' => array(
+			'many_many' => array(
 				SiteMedia::$plural_name => 'SiteMedia'
 			)
 		);
@@ -16,29 +16,30 @@ class SiteMediaDecoration extends DataObjectDecorator {
 		$fields->removeByName(SiteMedia::$plural_name);
 		
 		
-		if($this->owner->ShowSiteMedia() && $this->owner->ID)
+		if($this->owner->ShowSiteMedia() && $this->owner->ID )
 		{
 			// attempt to use DataObjectManager module
-			if(class_exists('HasManyDataObjectManager'))
+			if(true && class_exists('ManyManyDataObjectManager'))
 			{
 				$field = new SiteMediaDataObjectManager($this->owner, SiteMedia::$plural_name, 'SiteMedia');
+				$field->setOnlyRelated(true);
 				$field->setRelationAutoSetting(true);
 			}
-			else
+			else // else default to regular ComplexTableField
 			{
-			// else default to regular ComplexTableField
-				$field = new SiteMediaComplexTableField($this->owner, SiteMedia::$plural_name, 'SiteMedia');
+				$field = new ManyManyComplexTableField($this->owner, SiteMedia::$plural_name, 'SiteMedia');
 			}
-			
 			$fields->addFieldToTab($tab,$field);
 		}
 		
 		return $fields;
 	}
 	
-	// Set the $show_site_media property on your object to FALSE will 
-	// disable media fields for this object from appearing in the CMS.
-	// Alternatively you can overload this ShowSiteMedia according to your needs
+	// Setting a $show_site_media property on your base object to FALSE will 
+	// disable media fields from appearing in the CMS.
+	
+	// Alternatively you can overload/provide an alternate ShowSiteMedia() method
+	//  on your base object. 
 	public function ShowSiteMedia()
 	{
 		return (property_exists($this->owner, 'show_site_media')) ?
@@ -53,16 +54,27 @@ class SiteMediaDecoration extends DataObjectDecorator {
 	 * @return ComponentSet
 	 */
 	public function SiteMedia($type = null, $limit = null){
-		// TODO: cache this (key: ID, Aggregate of SiteMedia LastEdited) 
+		$cache = SS_Cache::factory('SiteMedia');
+		$cachekey = md5(
+			$this->owner->ID .
+			$this->owner->class .
+			DataObject::Aggregate('SiteMedia')->Max('LastEdited') .
+			$type .
+			$limit
+		);
 		
-		$method = SiteMedia::$plural_name;
-		$filter = null;
-		if($type)
-		{
-			$filter = "\"MediaType\"" . (is_array($type) ? " IN('" . implode("','",$type) . "')" : " = '$type'");
+		if (!($result = $cache->load($cachekey))) {
+			$method = SiteMedia::$plural_name;
+			$filter = null;
+			if($type)
+			{
+				$filter = "\"SiteMedia\".\"MediaType\"" . (is_array($type) ? " IN('" . implode("','",$type) . "')" : " = '$type'");
+			}
+			
+			$result = serialize($this->owner->$method($filter, null, null, $limit));
+			$cache->save($result);
 		}
-
-		return $this->owner->$method($filter, null, null, $limit);
+		return unserialize($result);
 	}
 	
 	/**

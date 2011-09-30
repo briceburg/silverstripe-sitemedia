@@ -3,14 +3,14 @@
 class SiteMediaDecorator extends DataObjectDecorator {
 	function extraStatics(){
 		$types = implode(',',SiteMediaRegistry::$media_types);
-		$has_ones = array();
+		$belongs_many_many = array();
 		foreach(SiteMediaRegistry::$decorated_classes as $class)
 		{
-			$has_ones[$class] = $class;
+			$belongs_many_many[$class] = $class;
 		}
 
 		return array(
-			'has_one' 	=> $has_ones,
+			'belongs_many_many' 	=> $belongs_many_many,
 			'db'		=> array('MediaType' => "Enum('$types')"));
 	}
 }

@@ -43,12 +43,8 @@ class SiteMediaRegistry {
 	public static function init()
 	{
 		Object::add_extension('SiteMedia','SiteMediaDecorator');
-		
-		foreach(self::$decorated_classes as $class)
-		{
-			//SortableDataObject::add_sortable_many_many_relation($class,SiteMedia::$plural_name);
+		foreach(SiteMediaRegistry::$decorated_classes as $class) {
+			if(class_exists('SortableDataObject')) SortableDataObject::add_sortable_many_many_relation($class,SiteMedia::$plural_name);
 		}
 	}
-	
-	
 }

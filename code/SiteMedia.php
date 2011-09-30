@@ -23,12 +23,16 @@ class SiteMedia extends DataObject {
 		'Private'		=> 'Boolean'
 	);
 	
+	static $default_sort = "Title ASC";
+	
 	public function getCMSFields($params = null){
 
 		$fields = parent::getCMSFields(array(
+			'includeRelations' => false,
 			'restrictFields' => array_merge(array_keys(self::$db), SiteMediaRegistry::$decorated_classes, (array) 'MediaType')
 		));
 		
+		$fields->renameField('Private','Hide from Site-Wide Galleries');
 		
 		// detect the has_one
 		// TODO: investigate a more robust method to retrieve the ComplexTableField $Controller property 
@@ -176,5 +180,42 @@ class SiteMedia extends DataObject {
 	
 	public function DefaultWidth() {return self::$default_width;}	
 	public function DefaultHeight() {return self::$default_height;}
+	
+	public function getAppearsOn(){
+		$appears = array();
+		foreach($this->stat('has_one') as $class)
+		{
+			$property = $class . 'ID';
+			if($this->$property)
+				$appears[] = $class . ' (' . $this->$property . ')';
+		}
+		
+		return implode(',', $appears);
+	}
+	
+	public function BelongsTo()
+	{
+		$set = new DataObjectSet();
+		foreach($this->stat('has_one') as $class)
+		{
+			$property = $class . 'ID';
+			if($this->$property)
+				$set->push(DataObject::get_by_id($class,$this->$property));
+		}
+		return $set;
+	}
+	
+	// cleanup relations on delete
+	public function onBeforeDelete() {
+		parent::onBeforeDelete();
+		
+		if($this->ID)
+		{
+			foreach(SiteMediaRegistry::$decorated_classes as $componentName){
+				list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
+				DB::query("DELETE FROM $table WHERE \"$parentField\" = {$this->ID}");
+			}
+		}	
+	}
 	
 }

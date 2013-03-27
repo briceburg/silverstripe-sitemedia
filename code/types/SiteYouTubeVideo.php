@@ -1,35 +1,31 @@
 <?php
 
-class SiteYouTubeVideo extends DataObjectDecorator implements SiteMediaType_Interface {
+class SiteYouTubeVideo extends DataExtension implements SiteMediaType_Interface {
 	static $plural_name = 'YouTubeVideos';
 	static $media_upload_folder = 'YouTubeVideos';
 	static $allowed_file_types = array();
 	
-	public function extraStatics(){
-		return array(
-			'has_one' => array(
-				'PosterImage'		=> 'Image',
-				'ThumbnailImage'	=> 'Image'
-			),
-			'db' => array(
-				'YouTubeVideoID'	=> 'Varchar'
-			)
-		);
-	}
+	static $has_one = array(
+		'PosterImage'		=> 'Image',
+		'ThumbnailImage'	=> 'Image'
+	);
 	
-	public function updateCMSFields(&$fields){
+	static $db = array(
+		'YouTubeVideoID'	=> 'Varchar'
+	);
+	
+	
+	public function updateCMSFields(FieldList $fields) {
 		if($this->owner->MediaType != __CLASS__)
 			return;
 		
 		$thumbField = $this->owner->getUploadField(
-			$this, 
 			'ThumbnailImage', 
 			'Thumbnail (optional - will grab from YouTube)',
 			SitePhoto::$allowed_file_types,
 			'images'
 		);
 		$posterField = $this->owner->getUploadField(
-			$this, 
 			'PosterImage', 
 			'Poster Image (optional - will grab from YouTube)',
 			SitePhoto::$allowed_file_types,

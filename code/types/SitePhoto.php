@@ -1,26 +1,24 @@
 <?php
 
-class SitePhoto extends DataObjectDecorator implements SiteMediaType_Interface {
+class SitePhoto extends DataExtension implements SiteMediaType_Interface {
 	static $plural_name = 'Photos';
 	static $media_upload_folder = 'Photos';
 	static $allowed_file_types = array('jpg','jpeg','gif','png');
 	
-	public function extraStatics(){
-		return array(
-			'has_one' => array(
-				'Photo'				=> 'Image',
-			),
-			'db' => array(
-				'Caption'			=> 'Varchar(255)'
-			)
-		);
-	}
+	static $has_one = array(
+		'Photo'		=> 'Image'
+	);
 	
-	public function updateCMSFields(&$fields){
+	static $db = array(
+		'Caption'	=> 'Varchar(255)'
+	);
+	
+	
+	public function updateCMSFields(FieldList $fields) {
 		if($this->owner->MediaType != __CLASS__)
 			return;
 		
-		$fileField = $this->owner->getUploadField($this, 'Photo');
+		$fileField = $this->owner->getUploadField('Photo');
 		
 		$fields->addFieldsToTab('Root.Main', array(
 			new TextField('Caption'),

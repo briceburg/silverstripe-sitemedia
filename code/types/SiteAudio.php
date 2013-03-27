@@ -1,29 +1,26 @@
 <?php
 // example audio type
-class SiteAudio extends DataObjectDecorator implements SiteMediaType_Interface {
+class SiteAudio extends DataExtension implements SiteMediaType_Interface {
 	static $plural_name = 'Audio';
 	static $media_upload_folder = 'audio';
 	static $allowed_file_types = array('ogg','wav','mp3');
 	
-	public function extraStatics(){
-		return array(
-			'has_one' => array(
-				'AudioFile'			=> 'File',
-				'AlbumCover'		=> 'Image',
-			),
-			'db' => array(
-				'BuyLink'		=> 'Varchar(255)'
-			)
-		);
-	}
+	static $db = array(
+		'BuyLink'		=> 'Varchar(255)'
+	);
 	
-	public function updateCMSFields(&$fields){
+	static $has_one = array(
+		'AudioFile'			=> 'File',
+		'AlbumCover'		=> 'Image'
+	);
+	
+	
+	public function updateCMSFields(FieldList $fields) {
 		if($this->owner->MediaType != __CLASS__)
 			return;
 		
-		$fileField = $this->owner->getUploadField($this, 'MP3');
+		$fileField = $this->owner->getUploadField('MP3');
 		$coverField = $this->owner->getUploadField(
-			$this, 
 			'AlbumCover', 
 			'Album Cover',
 			SitePhoto::$allowed_file_types,

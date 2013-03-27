@@ -1,16 +1,14 @@
 <?php
 
-class SiteMediaDecoration extends DataObjectDecorator {
-	function extraStatics(){
-		return array(
-			'many_many' => array(
-				SiteMedia::$plural_name => 'SiteMedia'
-			)
-		);
-	}
+class SiteMediaDecoration extends DataExtension {
 	
-	public function updateCMSFields(&$fields)
-	{
+	static $many_many = array('SiteMedias' => 'SiteMedia');
+	static $many_many_extraFields = array(
+		'SiteMedias' => array('SortOrder' => 'Int')	
+	);
+	
+	
+	public function updateCMSFields(FieldList $fields) {
 		$tab = ($fields->fieldByName('Root.Content')) ? 'Root.Content.Media' : 'Root.Media';
 		
 		$fields->removeByName(SiteMedia::$plural_name);
@@ -18,17 +16,32 @@ class SiteMediaDecoration extends DataObjectDecorator {
 		
 		if($this->owner->ShowSiteMedia() && $this->owner->ID )
 		{
-			// attempt to use DataObjectManager module
-			if(true && class_exists('ManyManyDataObjectManager'))
+			//@todo implement shared
+			$shared	= false;
+			
+			$field	= new GridField(SiteMedia::$plural_name, 'SiteMedia', $this->owner->SiteMedias(),
+					GridFieldConfig_RelationEditor::create());
+			$config	= $field->getConfig();
+			
+			$config->addComponents(
+					new GridFieldOrderableRows('SortOrder'),
+					new GridFieldDeleteAction($shared)
+			);
+			
+			if(!$shared)
 			{
-				$field = new SiteMediaDataObjectManager($this->owner, SiteMedia::$plural_name, 'SiteMedia');
-				$field->setOnlyRelated(true);
-				$field->setRelationAutoSetting(true);
+				$config->removeComponentsByType('GridFieldAddExistingAutocompleter');
 			}
-			else // else default to regular ComplexTableField
-			{
-				$field = new ManyManyComplexTableField($this->owner, SiteMedia::$plural_name, 'SiteMedia');
-			}
+			$config->removeComponentsByType('GridFieldDeleteAction');
+			
+			
+			$config->getComponentByType('GridFieldAddNewButton')
+				->setButtonName('Add Media');
+			
+			$field->setTitle('Media');
+			
+			
+			
 			$fields->addFieldToTab($tab,$field);
 		}
 		
@@ -54,21 +67,24 @@ class SiteMediaDecoration extends DataObjectDecorator {
 	 * @return ComponentSet
 	 */
 	public function SiteMedia($type = null, $limit = null){
+		if(!is_array($type)) $type = array($type);
+		$types = implode("','",$type);
+		
 		$cache = SS_Cache::factory('SiteMedia');
 		$cachekey = md5(
 			$this->owner->ID .
 			$this->owner->class .
-			DataObject::Aggregate('SiteMedia')->Max('LastEdited') .
-			$type .
+			SiteMedia::get()->max('LastEdited') .
+			$types .
 			$limit
 		);
 		
 		if (!($result = $cache->load($cachekey))) {
 			$method = SiteMedia::$plural_name;
 			$filter = null;
-			if($type)
+			if(!empty($type))
 			{
-				$filter = "\"SiteMedia\".\"MediaType\"" . (is_array($type) ? " IN('" . implode("','",$type) . "')" : " = '$type'");
+				$filter = "\"SiteMedia\".\"MediaType\" IN('$types')";
 			}
 			
 			$result = serialize($this->owner->$method($filter, null, null, $limit));
@@ -87,7 +103,7 @@ class SiteMediaDecoration extends DataObjectDecorator {
     				$media->Thumbnail() : null;
     		}
 	 * 
-	 * @param string $type optional filter by type.
+	 * @param string|array $type optional filter by type.
 	 * @return SiteMedia
 	 */
 	public function FirstSiteMedia($type = null)

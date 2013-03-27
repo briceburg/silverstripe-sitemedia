@@ -18,55 +18,51 @@ class SiteMedia extends DataObject {
 	);
 	
 	static $db = array(
-		'MediaType'		=> 'Enum()',
+		//'MediaType'		=> 'Enum()', [dynamically applied via SiteRegistryInit]
 		'Title'			=> 'Varchar',
 		'Private'		=> 'Boolean'
 	);
 	
+	static $searchable_fields = array(
+			'Title'
+	);
+	
 	static $default_sort = "Title ASC";
 	
-	public function getCMSFields($params = null){
-
-		$fields = parent::getCMSFields(array(
-			'includeRelations' => false,
-			'restrictFields' => array_merge(array_keys(self::$db), SiteMediaRegistry::$decorated_classes, (array) 'MediaType')
+	public function getCMSFields(){
+		
+		// get fields for this SiteMedia
+		$fields = $this->scaffoldFormFields(array(
+				'includeRelations' => (false),
+				'restrictFields' => array_merge(array_keys(self::$db), SiteMediaRegistry::$decorated_classes, (array) 'MediaType'),
+				'tabbed' => true,
+				'ajaxSafe' => true
 		));
-		
-		$fields->renameField('Private','Hide from Site-Wide Galleries');
-		
-		// detect the has_one
-		// TODO: investigate a more robust method to retrieve the ComplexTableField $Controller property 
-		$current_page = Controller::curr()->getFormOwner()->currentPage();
-		$current_class = ($current_page->is_a('ModelAdmin_RecordController')) ?
-			$current_page->getCurrentRecord()->class : $current_page->class;
+		$this->extend('updateCMSFields', $fields);
 		
 		
-		$allowed_types = array();
-		$types = array();
-		foreach($fields->dataFields() as $field)
-		{
-			$class = preg_replace('/ID$/','',$field->Name(),1,$count);
-			if($count && $field->is_a('DropdownField') && in_array($class,SiteMediaRegistry::$decorated_classes))
-			{
-				if($class == $current_class)
-				{
-					$allowed_types = SiteMediaRegistry::$allowed_types_by_class[$class];
-				}
-				else
-				{
-					$fields->removeByName($field->name,true);
-				}
-				
-			}
-		}
+		// @todo implement shared
+		$shared = false;
+		$shared ?
+			$fields->renameField('Private','Hide from Site-Wide Galleries') :
+			$fields->removeByName('Private');
+		
+		
+		// detect current class 
+		if(!$class = Controller::curr()->getRequest()->param("ModelClass"))				// [model admin]
+			$class = Controller::curr()->getEditForm()->getRecord()->getClassName();	// [CMS Mainm]
+		
 
+		// limit the MediaType to allowed media types
+		$types = array();
+		$allowed_types = SiteMediaRegistry::$allowed_types_by_class[$class];
 		foreach(SiteMediaRegistry::$media_types as $type)
 		{
 			if(empty($allowed_types) || in_array($type,$allowed_types))
 				$types[$type] = preg_replace('/^Site/','',$type);				
 		}
-		
 		$fields->dataFieldByName('MediaType')->setSource($types);
+		
 		
 		return $fields;
 	}
@@ -78,56 +74,30 @@ class SiteMedia extends DataObject {
 	/**
 	 * Returns a form field for uploading a file. 
 	 *   Attempts to use the Uploadify module if present.
-	 * @param DataObjectDecorator $mediaType Media Type Instance (e.g. SitePhoto)
 	 * @param string $fieldName Form Field Name
 	 * @param string $fieldTitle Form Field Title
 	 * @param array|null $fileTypes Array of allowed extensions (e.g. array('gif','jpg'))
 	 * @param string|null $subfolder Files will be uploaded to this subfolder of the Media Type's $media_upload_folder 
 	 * @return FormField
 	 */
-	public function getUploadField($mediaType, $fieldName, $fieldTitle = null, $fileTypes = null, $subfolder = null){
-		$class = $mediaType->class;
+	public function getUploadField($fieldName, $fieldTitle = null, $fileTypes = null, $subfolder = null){
 		
 		$allowed_file_types = (is_array($fileTypes)) ?
 			$fileTypes :
-			Object::get_static($class, 'allowed_file_types');
+			Object::get_static($this->MediaType, 'allowed_file_types');
 
 		$folder = (property_exists($this, 'media_upload_folder')) ?
 			$this->media_upload_folder : 
-			Object::get_static($class,'media_upload_folder');
+			Object::get_static($this->MediaType,'media_upload_folder');
 		$folder .= '/' . date('Y-m') . (($subfolder) ? '/' . $subfolder : '');
 		
-		// attempt to use Uploadify module
-		if(class_exists('FileUploadField'))
-		{
-			$field = new FileUploadField($fieldName);
-			$field->uploadFolder = $folder;
-			if($allowed_file_types)
-			{
-				$field->setFileTypes(
-					$allowed_file_types, 
-					implode(',',$allowed_file_types)
-				);
-			}
-			$field->allowFolderSelection();
-		}
-		else
-		{
-		// else default to regular FileIFrameField
-			$field = new FileIFrameField($fieldName);
-			$field->setFolderName($folder);
-			if($allowed_file_types)
-			{
-				$validator = new Upload_Validator();
-				$validator->setAllowedExtensions($allowed_file_types);
-				$field->setValidator($validator);
-			}
-		}
 		
-		if($fieldTitle)
-		{
-			$field->setTitle($fieldTitle);
-		}
+		$field = new UploadField($name = $fieldName, $title = $fieldTitle);
+		$field->setFolderName($folder);
+		
+		if($allowed_file_types) {
+			$field->getValidator()->setAllowedExtensions($allowed_file_types);
+		}	
 		
 		return $field;
 	}
@@ -205,17 +175,27 @@ class SiteMedia extends DataObject {
 		return $set;
 	}
 	
-	// cleanup relations on delete
+	
 	public function onBeforeDelete() {
-		parent::onBeforeDelete();
-		
 		if($this->ID)
 		{
+			// cleanup other existing relations upon delete
 			foreach(SiteMediaRegistry::$decorated_classes as $componentName){
 				list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
 				DB::query("DELETE FROM $table WHERE \"$parentField\" = {$this->ID}");
 			}
-		}	
+			
+			// remove the uploaded file
+			// @TODO: only remove the file if there are no more relationships
+			if($file = $this->File())
+			{
+				if($file->ID) {
+					$file->delete();
+				}
+			}
+		}
+		
+		return parent::onBeforeDelete();
 	}
 	
 }

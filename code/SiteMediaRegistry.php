@@ -1,5 +1,7 @@
 <?php 
 
+//@TODO implement decorate: shared 
+
 class SiteMediaRegistry {
 	
 	static $decorated_classes = array();
@@ -7,7 +9,21 @@ class SiteMediaRegistry {
 	static $media_types = array();
 	
 	
-	public static function decorate($class, $types = array())
+	/**
+	 * SiteMediaRegistry::decorate('NewsStory', array('SitePhoto'), true) 
+	 *   // News Stories will have SitePhotos appear in the Media Tab, and will be able
+	 *   //  to use photos that were added to another NewsStory
+	 *   
+	 * SiteMediaRegistry::decorate('Page')
+	 *   // Pages will have all Media Types appear in the Media Tab. Each page will feature
+	 *   //   unique media (photos, videos, etc.)
+	 * 
+	 * @param string $class 		Classname to decorate with SiteMedia
+	 * @param array $allowed_types	Restrict SiteMedia to specific types (e.g. SiteVideo only)
+	 * @param boolean $shared		Share SiteMedia with a global library [many-many behavior]
+	 */
+	
+	public static function decorate($class, $allowed_types = array(), $shared = false)
 	{
 		if(!class_exists($class))
 		{
@@ -19,14 +35,20 @@ class SiteMediaRegistry {
 			Object::add_extension($class,'SiteMediaDecoration');
 		}
 		
-		if(!is_array($types))
+		if(!is_array($allowed_types))
 		{
-			user_error("Passed types must be an array.", E_USER_ERROR);
+			user_error("Allowed Types must be an array.", E_USER_ERROR);
 		}
 		
-		self::$allowed_types_by_class[$class] = $types;
+		self::$allowed_types_by_class[$class] = $allowed_types;
 	}
 	
+	
+	/**
+	 * SiteMediaRegistry::add_type('SiteYouTubeVideo');
+	 * 
+	 * @param string $type		Type to register as valid SiteMedia to select from
+	 */
 	public static function add_type($type){
 		if(!class_exists($type))
 		{
@@ -40,11 +62,29 @@ class SiteMediaRegistry {
 		}
 	}
 	
+	/**
+	 * Call **after** all decorations + type registrations
+	 */
 	public static function init()
 	{
+		$types = implode(', ',self::$media_types);
+		$belongs_many_many = array();
+		foreach(self::$decorated_classes as $class)
+		{
+			$belongs_many_many[$class] = $class;
+		}
+		
+		SiteMediaDecorator::$belongs_many_many = $belongs_many_many;
+		SiteMediaDecorator::$db = array(
+			'MediaType' => "Enum(\"$types\")"
+		);
+		
 		Object::add_extension('SiteMedia','SiteMediaDecorator');
+		
+		/*
 		foreach(SiteMediaRegistry::$decorated_classes as $class) {
 			if(class_exists('SortableDataObject')) SortableDataObject::add_sortable_many_many_relation($class,SiteMedia::$plural_name);
 		}
+		*/
 	}
 }

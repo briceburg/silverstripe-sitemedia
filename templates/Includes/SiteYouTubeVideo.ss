@@ -1,0 +1,1 @@
+<iframe width="560" height="315" src="http://www.youtube-nocookie.com/embed/{$YouTubeVideoID}?wmode=opaque" frameborder="0" allowfullscreen></iframe>

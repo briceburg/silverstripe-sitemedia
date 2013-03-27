@@ -1,5 +1,5 @@
 <?php
-class SiteMediaImageDecorator extends DataObjectDecorator {
+class SiteMediaImageDecorator extends DataExtension {
 
  	function generateSiteMediaThumbnail($gd){
         return $gd->croppedResize(

@@ -5,53 +5,33 @@
    <brice (at) digome (dot) com>
 	
 ## Requirements
- * SilverStripe 2.4.x
-
+ * SilverStripe >= 3.0 [For SilverStripe 2 use the original module in the -ss2 branch ( https://github.com/briceburg/silverstripe-sitemedia/tree/ss2 )]
+ * Andrew Short's GridFieldExtensions [ https://github.com/ajshort/silverstripe-gridfieldextensions ]
+ 
+ 
 ## Overview
-Add and manage a common library of Media from your Pages and DataObjects. 
-
-Version aardvark PR-2
 
 
-### Features
+Version aardvark PR-1
 
- * Easily add Photos, Videos, and more to your Objects
- 
- * Decorate only the Objects you want Media on
- 
- * Control the order of Media on an Object
- 
- * Leverages Uploadify and DataObjectManager modules for an enhanced CMS experience. Falls back to core SilverStripe HasManyComplexTableField & FileIframeField in their absence.
 
- * Define custom Media Types using standard SilverStripe practices
- 
- * Support for any custom field in your Types, e.g. Caption, Poster Image, YouTubeVideoID, etc.
-    
- * Limit types per Decoration (e.g. Photos only on Pages, Photos and Video on Artists)
- 
- * [coming very soon] Includes designer and developer friendly streamlined media player.
+## Features
 
- * [coming soon] Viewers can browse all uploaded Media on your site from a single Page
+  * Attach media to your Pages and DataObjects. 
+  * Exposes a consistent management interface that features extensible media types and a common [many-many] library. 
+  * Leverages GridField and GridFieldExtensions for sortable DragAndDrop support. 
+  * Examples include Photos, Videos, YouTubeVideos, and Audio.
+  * Define custom Media Types using standard SilverStripe practices
+  * Limit MediaTypes per decoration (e.g. allow only SitePhotos on Pages, SiteVideos and SitePhotos on Artists).
+  * Built-in SiteMediaPage allowing viewers to browse all [public] Media that has been attached uploaded.
  
- * Ability to mark uploaded Media as Private (excludes it from the Media Page)
- 
-
- 
-### Demonstration
-
-  * coming soon
-  
 	
-### Configuration & Usage
+## Configuration & Usage
 
  * Coming soon. See _config.php for an example.
  * Reference the templates and media types
 
-### Known Issues, TODO
- 
- * Add CSS, JavaScript for the included Media Gallery Markup sample.
- * Add Comments to SiteMedia (deferred until new Comments Module)
- * Documentation, example usage.
- * Add Demo YouTube Video Type
- * Add Demo Audio Player
- * Create a SiteMediaPage where all uploaded and non private SiteMedia is displayed.
+## Bugs
+
+For support or questions, please use the GitHub provided issue tracker;
+* https://github.com/briceburg/silverstripe-sitemedia/issues

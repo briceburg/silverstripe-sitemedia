@@ -1,37 +1,33 @@
 <?php
 
-class SiteVideo extends DataObjectDecorator implements SiteMediaType_Interface {
+class SiteVideo extends DataExtension implements SiteMediaType_Interface {
 	static $plural_name = 'Videos';
 	static $media_upload_folder = 'Videos';
 	static $allowed_file_types = array('flv','mp4');
 	
-	public function extraStatics(){
-		return array(
-			'has_one' => array(
-				'Video'				=> 'File',
-				'PosterImage'		=> 'Image',
-				'ThumbnailImage'	=> 'Image'
-			),
-			'db' => array(
-				'Caption'			=> 'Varchar(255)'
-			)
-		);
-	}
+	static $has_one = array(
+		'Video'				=> 'File',
+		'PosterImage'		=> 'Image',
+		'ThumbnailImage'	=> 'Image'
+	);
 	
-	public function updateCMSFields(&$fields){
+	static $db = array(
+		'Caption'	=> 'Varchar(255)'
+	);
+	
+	
+	public function updateCMSFields(FieldList $fields) {
 		if($this->owner->MediaType != __CLASS__)
 			return;
 		
-		$fileField = $this->owner->getUploadField($this, 'Video');
+		$fileField = $this->owner->getUploadField('Video');
 		$thumbField = $this->owner->getUploadField(
-			$this, 
 			'ThumbnailImage', 
 			'Thumbnail',
 			SitePhoto::$allowed_file_types,
 			'images'
 		);
 		$posterField = $this->owner->getUploadField(
-			$this, 
 			'PosterImage', 
 			'Poster Image',
 			SitePhoto::$allowed_file_types,

@@ -5,7 +5,7 @@
    <brice (at) digome (dot) com>
 	
 ## Requirements
- * SilverStripe 2.4.x
+ * SilverStripe 2.4.x (For SilverStripe 3, see the -master branch)
 
 ## Overview
 Add and manage a common library of Media from your Pages and DataObjects. 

@@ -1,9 +1,5 @@
 # Silverstripe SiteMedia Module
 
-## Maintainer Contact 
- * Brice Burgess (Nickname: briceburg, brice, briceburgess)
-   <brice (at) digome (dot) com>
-	
 ## Requirements
  * SilverStripe >= 3.0 [For SilverStripe 2 use the original module in the -ss2 branch ( https://github.com/briceburg/silverstripe-sitemedia/tree/ss2 )]
  * Andrew Short's GridFieldExtensions [ https://github.com/ajshort/silverstripe-gridfieldextensions ]

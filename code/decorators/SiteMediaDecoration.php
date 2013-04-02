@@ -82,7 +82,7 @@ class SiteMediaDecoration extends DataExtension {
 		if (!($result = $cache->load($cachekey))) {
 			$method = SiteMedia::$plural_name;
 			$filter = null;
-			if(!empty($type))
+			if(!empty($types))
 			{
 				$filter = "\"SiteMedia\".\"MediaType\" IN('$types')";
 			}

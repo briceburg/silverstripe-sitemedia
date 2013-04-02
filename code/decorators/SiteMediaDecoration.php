@@ -113,12 +113,12 @@ class SiteMediaDecoration extends DataExtension {
 	}
 	
 	public function HasSiteMedia(){
-		return ($this->SiteMedia()->TotalItems());
+		return ($this->SiteMedia()->count());
 	}
 	
 	public function HasMultipleSiteMedia()
 	{
-		return ($this->SiteMedia()->TotalItems() > 1);
+		return ($this->SiteMedia()->count() > 1);
 	}
 	
 }

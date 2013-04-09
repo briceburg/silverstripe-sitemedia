@@ -1,15 +1,15 @@
 <?php
 // example audio type
 class SiteAudio extends DataExtension implements SiteMediaType_Interface {
-	static $plural_name = 'Audio';
-	static $media_upload_folder = 'audio';
-	static $allowed_file_types = array('ogg','wav','mp3');
+	public static $plural_name = 'Audio';
+	public static $media_upload_folder = 'audio';
+	public static $allowed_file_types = array('ogg','wav','mp3');
 	
-	static $db = array(
+	private static $db = array(
 		'BuyLink'		=> 'Varchar(255)'
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'AudioFile'			=> 'File',
 		'AlbumCover'		=> 'Image'
 	);

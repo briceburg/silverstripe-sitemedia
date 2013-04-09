@@ -4,9 +4,9 @@
 
 class SiteMediaRegistry {
 	
-	static $decorated_classes = array();
-	static $allowed_types_by_class = array();
-	static $media_types = array();
+	public static $decorated_classes = array();
+	public static $allowed_types_by_class = array();
+	public static $media_types = array();
 	
 	
 	/**
@@ -32,7 +32,7 @@ class SiteMediaRegistry {
 		elseif(!in_array($class,self::$decorated_classes))
 		{
 			self::$decorated_classes[] = $class;
-			Object::add_extension($class,'SiteMediaDecoration');
+			$class::add_extension('SiteMediaDecoration');
 		}
 		
 		if(!is_array($allowed_types))
@@ -58,7 +58,7 @@ class SiteMediaRegistry {
 		if(!in_array($type, self::$media_types))
 		{
 			self::$media_types[] = $type;
-			Object::add_extension('SiteMedia',$type);
+			SiteMedia::add_extension($type);
 		}
 	}
 	
@@ -74,17 +74,9 @@ class SiteMediaRegistry {
 			$belongs_many_many[$class] = $class;
 		}
 		
-		SiteMediaDecorator::$belongs_many_many = $belongs_many_many;
-		SiteMediaDecorator::$db = array(
-			'MediaType' => "Enum(\"$types\")"
-		);
+		Config::inst()->update('SiteMediaDecorator','belongs_many_many',$belongs_many_many);
+		Config::inst()->update('SiteMediaDecorator','db',array('MediaType' => "Enum(\"$types\")"));
 		
-		Object::add_extension('SiteMedia','SiteMediaDecorator');
-		
-		/*
-		foreach(SiteMediaRegistry::$decorated_classes as $class) {
-			if(class_exists('SortableDataObject')) SortableDataObject::add_sortable_many_many_relation($class,SiteMedia::$plural_name);
-		}
-		*/
+		Config::inst()->update('SiteMedia', 'extensions', array('SiteMediaDecorator'));
 	}
 }

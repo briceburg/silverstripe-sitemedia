@@ -8,13 +8,13 @@
  *
  */
 class SiteMediaPage extends Page {
-	static $db = array(
+	private static $db = array(
 		'MediaTypes'	=>	'Varchar(255)',
 		'SortOrder'		=>	"Enum('LastEdited DESC,LastEdited ASC,Title ASC,Title DESC', 'LastEdited DESC')",
 		'CustomMethod'	=>	'Varchar'
 	);
 	
-	function getCMSFields($params = null){
+	public function getCMSFields($params = null){
 		$fields = parent::getCMSFields($params);
 		
 		

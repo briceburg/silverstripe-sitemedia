@@ -1,15 +1,15 @@
 <?php
 
 class SitePhoto extends DataExtension implements SiteMediaType_Interface {
-	static $plural_name = 'Photos';
-	static $media_upload_folder = 'Photos';
-	static $allowed_file_types = array('jpg','jpeg','gif','png');
+	public static $plural_name = 'Photos';
+	public static $media_upload_folder = 'Photos';
+	public static $allowed_file_types = array('jpg','jpeg','gif','png');
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Photo'		=> 'Image'
 	);
 	
-	static $db = array(
+	private static $db = array(
 		'Caption'	=> 'Varchar(255)'
 	);
 	

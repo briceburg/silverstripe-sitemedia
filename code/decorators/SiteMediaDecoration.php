@@ -2,8 +2,8 @@
 
 class SiteMediaDecoration extends DataExtension {
 	
-	static $many_many = array('SiteMedias' => 'SiteMedia');
-	static $many_many_extraFields = array(
+	private static $many_many = array('SiteMedias' => 'SiteMedia');
+	private static $many_many_extraFields = array(
 		'SiteMedias' => array('SortOrder' => 'Int')	
 	);
 	

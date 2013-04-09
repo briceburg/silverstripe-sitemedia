@@ -40,4 +40,4 @@
  * END EXAMPLES. Do not edit or copy below.
  */
 
-Object::add_extension('Image', 'SiteMediaImageDecorator');
+Config::inst()->update('Image', 'extensions', array('SiteMediaImageDecorator'));

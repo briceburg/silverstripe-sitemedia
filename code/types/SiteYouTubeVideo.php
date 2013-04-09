@@ -1,16 +1,16 @@
 <?php
 
 class SiteYouTubeVideo extends DataExtension implements SiteMediaType_Interface {
-	static $plural_name = 'YouTubeVideos';
-	static $media_upload_folder = 'YouTubeVideos';
-	static $allowed_file_types = array();
+	public static $plural_name = 'YouTubeVideos';
+	public static $media_upload_folder = 'YouTubeVideos';
+	public static $allowed_file_types = array();
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'PosterImage'		=> 'Image',
 		'ThumbnailImage'	=> 'Image'
 	);
 	
-	static $db = array(
+	private static $db = array(
 		'YouTubeVideoID'	=> 'Varchar'
 	);
 	

@@ -80,7 +80,7 @@ class SiteYouTubeVideo extends DataExtension implements SiteMediaType_Interface 
 
 	private function getFileByURL($url, $fileName){
 		$basePath			= Director::baseFolder() . DIRECTORY_SEPARATOR;
-		$folder				= Folder::findOrMake(self::$media_upload_folder); // relative to assets
+		$folder				= Folder::find_or_make(self::$media_upload_folder); // relative to assets
 		$relativeFilePath	= $folder->Filename . $fileName;
 		$fullFilePath		= $basePath . $relativeFilePath;
 		

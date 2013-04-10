@@ -9,6 +9,8 @@ class SiteMediaDecoration extends DataExtension {
 	
 	
 	public function updateCMSFields(FieldList $fields) {
+		if(!$fields->hasTabSet()) return $fields;
+		
 		$tab = ($fields->fieldByName('Root.Content')) ? 'Root.Content.Media' : 'Root.Media';
 		
 		$fields->removeByName(SiteMedia::$plural_name);

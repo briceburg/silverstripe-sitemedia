@@ -100,7 +100,15 @@ class SiteMedia extends DataObject {
 		
 		if($allowed_file_types) {
 			$field->getValidator()->setAllowedExtensions($allowed_file_types);
-		}	
+		}
+		
+		// determine if we are in admin or front-end, hide attaching existing files if in front-end.
+		$admin_base = Config::inst()->get('LeftAndMain', 'url_base');
+		if(!substr(Controller::curr()->getRequest()->getURL(), 0, strlen($admin_base) + 1) == $admin_base . '/')
+		{
+			$field->setConfig('canAttachExisting', false);
+		}
+		
 		
 		return $field;
 	}

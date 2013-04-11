@@ -29,7 +29,7 @@ class SiteMedia extends DataObject {
 	
 	private static $default_sort = "Title ASC";
 	
-	public function getCMSFields(){
+	public function getCMSFields($params = null){
 		
 		// get fields for this SiteMedia
 		$fields = $this->scaffoldFormFields(array(
@@ -48,9 +48,13 @@ class SiteMedia extends DataObject {
 			$fields->removeByName('Private');
 		
 		
-		// detect current class 
-		if(!$class = Controller::curr()->getRequest()->param("ModelClass"))				// [model admin]
-			$class = Controller::curr()->getEditForm()->getRecord()->getClassName();	// [CMS Mainm]
+		// detect current class @todo is there a better/more reliable method? 
+		if(!$class = Controller::curr()->getRequest()->param("ModelClass")) 		// [ModelAdmin]
+		{
+			$class = (Controller::curr()->hasMethod('getEditForm')) ? 
+				Controller::curr()->getEditForm()->getRecord()->getClassName() :	// [CMS Main]
+				preg_replace('/Form$/', '', Controller::curr()->getAction());		// [Front-End]
+		}
 		
 
 		// limit the MediaType to allowed media types
@@ -62,8 +66,7 @@ class SiteMedia extends DataObject {
 				$types[$type] = preg_replace('/^Site/','',$type);				
 		}
 		$fields->dataFieldByName('MediaType')->setSource($types);
-		
-		
+
 		return $fields;
 	}
 	

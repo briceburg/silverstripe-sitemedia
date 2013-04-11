@@ -7,6 +7,9 @@
  *   and dataobjects.
  *
  */
+
+/*
+ * Commented out as this has not been tested yet in SS 3+
 class SiteMediaPage extends Page {
 	private static $db = array(
 		'MediaTypes'	=>	'Varchar(255)',
@@ -87,3 +90,4 @@ class SiteMediaPage_Controller extends Page_Controller {
 	}
 	
 }
+**/

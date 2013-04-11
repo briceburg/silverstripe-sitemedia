@@ -25,6 +25,8 @@ class SiteMediaDecoration extends DataExtension {
 					GridFieldConfig_RelationEditor::create());
 			$config	= $field->getConfig();
 			
+			$config->removeComponentsByType('GridFieldDeleteAction');
+			
 			$config->addComponents(
 					new GridFieldOrderableRows('SortOrder'),
 					new GridFieldDeleteAction($shared)
@@ -34,7 +36,6 @@ class SiteMediaDecoration extends DataExtension {
 			{
 				$config->removeComponentsByType('GridFieldAddExistingAutocompleter');
 			}
-			$config->removeComponentsByType('GridFieldDeleteAction');
 			
 			
 			$config->getComponentByType('GridFieldAddNewButton')

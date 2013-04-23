@@ -90,7 +90,7 @@ class SiteMediaDecoration extends DataExtension {
 				$filter = "\"SiteMedia\".\"MediaType\" IN('$types')";
 			}
 			
-			$result = serialize($this->owner->$method($filter, null, null, $limit));
+			$result = serialize($this->owner->$method($filter, null, null, $limit)->sort('SortOrder'));
 			$cache->save($result);
 		}
 		return unserialize($result);

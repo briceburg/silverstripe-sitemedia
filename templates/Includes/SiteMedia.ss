@@ -6,9 +6,9 @@
 			<div class="site-media-nav-prev"><div></div></div>
 			
 			<div class="site-media-nav-button-container">
-				<% control SiteMedia %>
+				<% loop SiteMedia %>
 					<a href="#" class="site-media-button <% if First %>active<% end_if %>">$Pos</a>
-				<% end_control %>
+				<% end_loop %>
 				<div class="cl">&nbsp;</div>
 			</div>
 			
@@ -17,7 +17,7 @@
 		<div id="site-media-container">
 		
 			<div id="site-media-items">
-				<% control SiteMedia %>
+				<% loop SiteMedia %>
 				
 					<div class="site-media-item">
 					
@@ -39,7 +39,7 @@
 						
 					</div>
 		
-				<% end_control %>
+				<% end_loop %>
 			</div>
 		
 		</div>

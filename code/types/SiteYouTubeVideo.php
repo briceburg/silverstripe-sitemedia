@@ -29,10 +29,13 @@ class SiteYouTubeVideo extends DataExtension implements SiteMediaType_Interface
         
         $fields->addFieldsToTab('Root.Main', array(
             new TextField('YouTubeVideoID', 'YouTube Video ID'),
+            $caption = new TextareaField('Caption'),
             $thumbField,
             $posterField,
-            new TextField('Caption')
+            
         ));
+        
+        $caption->setRows(1);
     }
 
     public function File()

@@ -15,7 +15,7 @@
     "issues": "https://github.com/briceburg/silverstripe-sitemedia/issues"
   },
   "require": {
-    "silverstripe/framework": "~2.4",
+    "silverstripe/framework": "~2.4"
   },
   "extra": {
     "installer-name": "sitemedia"

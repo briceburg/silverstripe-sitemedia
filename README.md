@@ -44,7 +44,7 @@ Version aardvark PR-2
 	
 ### Configuration & Usage
 
- * Coming soon. See _config.php for an example.
+ * Coming soon. See _config.php / example.config.php for an example.
  * Reference the templates and media types
 
 ### Known Issues, TODO

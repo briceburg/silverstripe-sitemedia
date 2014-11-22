@@ -18,6 +18,6 @@
     "silverstripe/framework": "~2.4",
   },
   "extra": {
-    "installer-name": "sitemedia",
+    "installer-name": "sitemedia"
   }
 }

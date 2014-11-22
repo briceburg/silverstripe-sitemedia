@@ -3,7 +3,7 @@
   "description": "Add and manage a common library of Media from your Pages and DataObjects. SilverStripe 2.4 compatible.",
   "type": "silverstripe-module",
   "homepage": "https://github.com/briceburg/silverstripe-sitemedia",
-  "keywords": ["silverstripe", "media", "video", "photo", "image", "library", "youtube","many_many" "gridfield"],
+  "keywords": ["silverstripe", "media", "video", "photo", "image", "library", "youtube","many_many", "gridfield"],
   "license": "BSD-3-Clause",
   "authors": [
     {

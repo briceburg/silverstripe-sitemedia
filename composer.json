@@ -1,0 +1,24 @@
+{
+	"name": "briceburg/silverstripe-sitemedia",
+	"description": "Add and manage a common library of Media from your Pages and DataObjects",
+	"type": "silverstripe-module",
+	"homepage": "https://github.com/briceburg/silverstripe-sitemedia",
+	"keywords": ["silverstripe", "media", "video", "photo", "image", "library", "youtube","many_many" "gridfield"],
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Brice Burgess",
+			"email": "briceburg@gmail.com"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/briceburg/silverstripe-sitemedia/issues"
+	},
+	"require": {
+	  "silverstripe/framework": "~3.0",
+		"ajshort/silverstripe-gridfieldextensions": "*"
+	},
+	"extra": {
+		"installer-name": "sitemedia",
+	}
+}

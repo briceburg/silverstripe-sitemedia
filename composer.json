@@ -15,8 +15,8 @@
 		"issues": "https://github.com/briceburg/silverstripe-sitemedia/issues"
 	},
 	"require": {
-	  "silverstripe/framework": "~3.0",
-		"ajshort/silverstripe-gridfieldextensions": "*"
+		"silverstripe/framework": "~3.0",
+		"silverstripe-australia/silverstripe-gridfieldextensions": "*"
 	},
 	"extra": {
 		"installer-name": "sitemedia"

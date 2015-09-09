@@ -16,7 +16,7 @@
 	},
 	"require": {
 		"silverstripe/framework": "~3.0",
-		"silverstripe-australia/silverstripe-gridfieldextensions": "*"
+		"silverstripe-australia/gridfieldextensions": "*"
 	},
 	"extra": {
 		"installer-name": "sitemedia"

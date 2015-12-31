@@ -21,8 +21,9 @@ class SiteYouTubeVideo extends DataExtension implements SiteMediaType_Interface
 
     public function updateCMSFields(FieldList $fields)
     {
-        if ($this->owner->MediaType != __CLASS__)
+        if ($this->owner->MediaType != __CLASS__) {
             return;
+        }
         
         $thumbField = $this->owner->getUploadField('ThumbnailImage', 'Thumbnail (optional - will grab from YouTube)', SitePhoto::$allowed_file_types, 'images');
         $posterField = $this->owner->getUploadField('PosterImage', 'Poster Image (optional - will grab from YouTube)', SitePhoto::$allowed_file_types, 'images');
@@ -67,14 +68,15 @@ class SiteYouTubeVideo extends DataExtension implements SiteMediaType_Interface
             $write = true;
         }
         
-        if ($write)
+        if ($write) {
             $this->owner->write();
+        }
     }
 
     private function getFileByURL($url, $fileName)
     {
         $folder = Folder::find_or_make(self::$media_upload_folder); // relative to assets
-        
+
         // create the file in database (sets title and safely names)
         $file = new Image();
         $file->ParentID = $folder->ID;
